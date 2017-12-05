@@ -63,8 +63,8 @@ button:active {
   font-size: 6em;
   max-width: 320px;
   max-height: 120px;
-
   flex: 1;
+  text-align: left;
 }
 
 .auto-scaling-text {
@@ -73,9 +73,8 @@ button:active {
 
 .calculator-display .auto-scaling-text {
   padding: 0 30px;
-  position: absolute;
-  center: 0;
-  transform-origin: right;
+  position: relative;
+  transform-origin: left;
 }
 
 .calculator-keypad {

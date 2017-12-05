@@ -1,99 +1,10 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { PointTarget } from 'react-point';
 import './Calculator.css';
+import CalculatorDisplay from './CalculatorDisplay';
+import CalculatorKey from './CalculatorKey';
+import KeyboardInput from './KeyboardInput';
 
-class AutoScalingText extends React.Component {
-  state = {
-    scale: 1
-  };
 
-  componentDidUpdate() {
-    const { scale } = this.state
-
-    const node = ReactDOM.findDOMNode(this)
-    const parentNode = node.parentNode
-
-    const availableWidth = parentNode.offsetWidth
-    const actualWidth = node.offsetWidth
-    const actualScale = availableWidth / actualWidth
-
-    if (scale === actualScale)
-      return
-
-    if (actualScale < 1) {
-      this.setState({ scale: actualScale })
-    } else if (scale < 1) {
-      this.setState({ scale: 1 })
-    }
-  }
-
-  render() {
-    const { scale } = this.state
-
-    return (
-      <div
-        className="auto-scaling-text"
-        style={{ transform: `scale(${scale},${scale})` }}
-      >{this.props.children}</div>
-    )
-  }
-}
-
-class KeyboardInput extends React.Component {
-  handleKeyDown = (event) => {
-    if (this.props.onKeyDown)
-      this.props.onKeyDown(event)
-  };
-
-  componentDidMount() {
-    document.addEventListener('keydown', this.handleKeyDown)
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('keydown', this.handleKeyDown)
-  }
-
-  render() {
-    return null
-  }
-}
-
-class CalculatorDisplay extends React.Component {
-  render() {
-    const { value } = this.props
-
-    const language = navigator.language || 'en-US'
-    let formattedValue = parseFloat(value).toLocaleString(language, {
-      useGrouping: true,
-      maximumFractionDigits: 6
-    })
-
-    // Add back missing .0 in e.g. 12.0
-    const match = value.match(/\.\d*?(0*)$/)
-
-    if (match)
-      formattedValue += (/[1-9]/).test(match[0]) ? match[1] : match[0]
-
-    return (
-      <div {...this.props} className="calculator-display">
-        <AutoScalingText>{formattedValue}</AutoScalingText>
-      </div>
-    )
-  }
-}
-
-class CalculatorKey extends React.Component {
-  render() {
-    const { className, onPress, ...props } = this.props
-
-    return (
-      <PointTarget component="button" className={`calculator-key ${className}`} onPoint={onPress}>
-        <div {...props}/>
-      </PointTarget>
-    )
-  }
-}
 
 const CalculatorOperations = {
   '/': (prevValue, nextValue) => prevValue / nextValue,
